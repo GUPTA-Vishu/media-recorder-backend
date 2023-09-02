@@ -1,6 +1,6 @@
 const dotenv = require("dotenv");
 const multer = require("multer");
-
+const cors = require('cors');
 const path = require("path");
 const mongoose = require("mongoose");
 const express = require("express");
@@ -9,10 +9,18 @@ const app = express();
 dotenv.config({ path: "./config.env" });
 require("./db/conn");
 const Media = require('./model/Media');
-
+const netlifySiteURL = "https://stellar-raindrop-84c43a.netlify.app/";
+const corsOptions = {
+  origin: netlifySiteURL,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  optionsSuccessStatus: 204, // Some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use(require("./router/auth"));
+
+
 
 
 const storage = multer.diskStorage({
@@ -66,6 +74,7 @@ app.get("/signup", (req, res) => {
 // app.get('*', (req,res) => {
 //   res.sendFile(path.join(__dirname, './client/build/index.html'))
 // });
+
 const PORT = process.env.PORT  || 5000;
 
 // Start the server
